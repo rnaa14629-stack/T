@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE UNWRITTEN | AI Research Lab</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+:root{
+  --bg:#090b14;--panel:#111525;--panel2:#171d31;
+  --line:rgba(157,170,255,.15);--blue:#668cff;
+  --cyan:#59d8f5;--purple:#a58bff;--orange:#ff987a;
+  --white:#f4f5ff;--muted:#929ab5;--green:#72dfbd;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--white);
+  font-family:'IBM Plex Sans Arabic',sans-serif;
+  min-height:100vh;overflow-x:hidden;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+::selection{background:var(--purple);color:#080a12}
+.bg-glow{
+  position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:
+    radial-gradient(ellipse at 12% 10%,rgba(80,111,255,.13),transparent 35%),
+    radial-gradient(ellipse at 90% 70%,rgba(154,99,255,.10),transparent 34%);
+}
+.mono{font-family:'Space Mono',monospace;direction:ltr;display:inline-block}
+.eyebrow{
+  color:var(--cyan);font-family:'Space Mono',monospace;
+  font-size:11px;letter-spacing:2px;direction:ltr;
+}
+.muted{color:var(--muted)}
+.accent{color:var(--cyan)}
+.purple{color:var(--purple)}
+.orange{color:var(--orange)}
+.hidden{display:none!important}
+
+/* INTRO */
+#intro{
+  position:fixed;inset:0;z-index:1000;background:#070912;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.intro-grid{
+  position:absolute;inset:0;opacity:.18;
+  background-image:
+    linear-gradient(rgba(116,139,255,.15) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(116,139,255,.15) 1px,transparent 1px);
+  background-size:55px 55px;
+  mask-image:linear-gradient(to bottom,black,transparent 95%);
+}
+.intro-orb{
+  position:absolute;width:520px;height:520px;border-radius:50%;
+  filter:blur(100px);opacity:.16;pointer-events:none;
+  background:#586cff;top:15%;left:10%;
+  animation:orb 8s ease-in-out infinite alternate;
+}
+.intro-orb.two{background:#9b65ff;top:50%;left:65%;width:400px;height:400px}
+@keyframes orb{to{transform:translate(80px,-40px) scale(1.2)}}
+.intro-top{
+  position:absolute;top:28px;left:5%;right:5%;
+  display:flex;justify-content:space-between;align-items:center;
+  color:#8992b1;font:11px 'Space Mono',monospace;direction:ltr;
+}
+.intro-progress{
+  position:absolute;bottom:0;right:0;height:3px;width:0;
+  background:linear-gradient(90deg,var(--purple),var(--cyan));
+  box-shadow:0 0 18px var(--cyan);
+}
+.intro-content{
+  position:relative;z-index:2;width:min(900px,90%);
+  text-align:center;padding:35px 20px;
+}
+.scene{display:none;animation:sceneIn 1s ease both}
+.scene.active{display:block}
+@keyframes sceneIn{
+  from{opacity:0;transform:translateY(22px);filter:blur(8px)}
+  to{opacity:1;transform:translateY(0);filter:blur(0)}
+}
+.scene h1{
+  font-size:clamp(36px,7vw,76px);line-height:1.25;
+  margin:18px 0;font-weight:600;letter-spacing:-2px;
+}
+.scene p{
+  color:#aeb5cc;font-size:clamp(15px,2vw,19px);
+  line-height:2;margin:15px auto;max-width:680px;
+}
+.scene .small-label{
+  color:var(--cyan);font:11px 'Space Mono',monospace;
+  letter-spacing:3px;direction:ltr;
+}
+.intro-brand{
+  font:700 clamp(28px,6vw,62px) 'Space Mono',monospace;
+  direction:ltr;letter-spacing:5px;
+  background:linear-gradient(100deg,#fff,#91a9ff,#c3a5ff);
+  -webkit-background-clip:text;color:transparent;
+  margin:22px 0;
+}
+.intro-visual{
+  width:min(600px,90%);margin:30px auto;height:150px;
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+.data-lines{display:flex;gap:8px;align-items:center;justify-content:center}
+.data-lines span{
+  width:7px;border-radius:9px;
+  background:linear-gradient(to top,var(--blue),var(--cyan));
+  animation:bars .9s ease-in-out infinite alternate;
+}
+.data-lines span:nth-child(1){height:30px}
+.data-lines span:nth-child(2){height:65px;animation-delay:.1s}
+.data-lines span:nth-child(3){height:95px;animation-delay:.2s}
+.data-lines span:nth-child(4){height:55px;animation-delay:.3s}
+.data-lines span:nth-child(5){height:120px;animation-delay:.4s}
+.data-lines span:nth-child(6){height:75px;animation-delay:.5s}
+.data-lines span:nth-child(7){height:40px;animation-delay:.6s}
+@keyframes bars{to{transform:scaleY(.35);opacity:.5}}
+.file-stack{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.file{
+  border:1px solid rgba(121,149,255,.28);background:#121a30;
+  border-radius:8px;padding:15px 18px;color:#c8d4ff;
+  font:11px 'Space Mono',monospace;direction:ltr;
+  animation:float 3s ease-in-out infinite;
+}
+.file:nth-child(2){animation-delay:.3s}
+.file:nth-child(3){animation-delay:.6s}
+@keyframes float{50%{transform:translateY(-9px)}}
+.pipeline{
+  display:flex;align-items:center;justify-content:center;
+  gap:12px;flex-wrap:wrap;margin:28px auto;
+}
+.pipe{
+  padding:17px 20px;border:1px solid var(--line);
+  border-radius:10px;background:rgba(18,26,48,.8);
+  color:#dce3ff;min-width:120px;
+}
+.pipe strong{display:block;color:var(--cyan);font:11px 'Space Mono',monospace;direction:ltr}
+.pipe small{color:var(--muted);font-size:11px}
+.pipe-arrow{color:var(--purple);font-size:22px}
+.compare{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  max-width:650px;margin:25px auto;text-align:right;
+}
+.compare-card{
+  background:rgba(17,23,41,.85);border:1px solid var(--line);
+  padding:18px;border-radius:12px;
+}
+.compare-card h3{font-size:15px;margin:0 0 12px}
+.compare-card p{font-size:13px;margin:7px 0;line-height:1.8}
+.intro-continue{
+  margin-top:24px;padding:13px 28px;border:1px solid rgba(110,150,255,.5);
+  background:linear-gradient(110deg,rgba(76,108,255,.2),rgba(164,119,255,.2));
+  color:white;border-radius:8px;transition:.25s;
+}
+.intro-continue:hover{background:rgba(100,125,255,.35);transform:translateY(-2px)}
+.skip-intro{
+  position:absolute;bottom:26px;left:5%;
+  border:1px solid var(--line);background:transparent;color:#aab1c9;
+  padding:8px 15px;border-radius:6px;font-size:12px;
+}
+.scene-counter{color:#737d9e;font:11px 'Space Mono',monospace;direction:ltr}
+
+/* APP */
+#app{display:none;min-height:100vh}
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(9,11,20,.88);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);
+}
+.header-inner{
+  max-width:1250px;margin:auto;padding:15px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+}
+.logo{
+  font:700 17px 'Space Mono',monospace;letter-spacing:2px;
+  direction:ltr;color:white;white-space:nowrap;
+}
+.logo span{color:var(--cyan)}
+nav{display:flex;gap:5px;flex-wrap:wrap}
+nav button{
+  background:transparent;border:0;color:#939bb5;
+  padding:9px 12px;border-radius:6px;font-size:12px;
+}
+nav button:hover,nav button.active{background:#1a2340;color:white}
+main{max-width:1250px;margin:auto;padding:42px 24px 90px}
+.page{display:none;animation:sceneIn .5s ease}
+.page.active{display:block}
+.page-heading{margin-bottom:28px}
+.page-heading h1{font-size:clamp(27px,4vw,42px);margin:8px 0}
+.page-heading p{color:var(--muted);line-height:1.9;max-width:700px}
+.panel{
+  background:linear-gradient(145deg,rgba(21,28,49,.96),rgba(14,19,34,.96));
+  border:1px solid var(--line);border-radius:14px;padding:22px;
+}
+.panel-title{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:18px;
+}
+.panel-title h2{font-size:16px;margin:0}
+.tag{
+  font:10px 'Space Mono',monospace;color:var(--cyan);
+  border:1px solid rgba(89,216,245,.25);padding:5px 8px;border-radius:4px;
+  direction:ltr;
+}
+.hero{
+  min-height:300px;display:flex;align-items:center;
+  background:
+    radial-gradient(ellipse at 80% 30%,rgba(89,110,255,.18),transparent 40%),
+    linear-gradient(120deg,#11182c,#101323);
+  overflow:hidden;position:relative;
+}
+.hero:after{
+  content:"";position:absolute;left:-80px;bottom:-180px;
+  width:430px;height:430px;border:1px solid rgba(111,141,255,.2);
+  border-radius:50%;box-shadow:0 0 0 35px rgba(111,141,255,.035),0 0 0 75px rgba(111,141,255,.025);
+}
+.hero-content{position:relative;z-index:2;max-width:700px}
+.hero h1{font-size:clamp(36px,6vw,64px);line-height:1.2;margin:16px 0}
+.hero p{color:#aeb7d1;line-height:2;max-width:600px}
+.primary-btn{
+  background:linear-gradient(100deg,#527aff,#8665e9);
+  border:0;color:white;padding:12px 22px;border-radius:7px;
+  margin-top:15px;box-shadow:0 8px 28px rgba(83,104,255,.18);
+}
+.primary-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.secondary-btn{
+  background:transparent;border:1px solid var(--line);
+  color:#c3cce5;padding:11px 18px;border-radius:7px;
+}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+.stat{padding:19px;background:#12192b;border:1px solid var(--line);border-radius:10px}
+.stat strong{font:26px 'Space Mono',monospace;color:var(--cyan);direction:ltr;display:block}
+.stat span{font-size:12px;color:var(--muted)}
+.two-col{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:16px}
+.timeline{display:grid;gap:0}
+.time-item{
+  display:grid;grid-template-columns:85px 1fr;gap:15px;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.time-item:last-child{border:0}
+.time-year{font:13px 'Space Mono',monospace;color:var(--cyan);direction:ltr}
+.time-item h3{font-size:14px;margin:0 0 6px}
+.time-item p{font-size:12px;line-height:1.8;color:var(--muted);margin:0}
+.note{
+  border-right:3px solid var(--purple);background:rgba(153,120,255,.08);
+  padding:15px 17px;border-radius:5px;color:#c8c8e4;
+  font-size:13px;line-height:1.9;margin-top:15px;
+}
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.info-card{
+  padding:20px;background:#12192b;border:1px solid var(--line);border-radius:12px;
+  transition:.25s;
+}
+.info-card:hover{border-color:rgba(110,150,255,.5);transform:translateY(-3px)}
+.card-icon{
+  width:40px;height:40px;border-radius:10px;display:grid;place-items:center;
+  background:rgba(96,132,255,.13);color:var(--cyan);font-size:19px;margin-bottom:15px;
+}
+.info-card h3{font-size:15px;margin:0 0 9px}
+.info-card p{font-size:12px;color:var(--muted);line-height:1.9;margin:0}
+.info-card a{color:var(--cyan);font-size:11px;display:inline-block;margin-top:13px}
+
+/* LAB */
+.lab-layout{display:grid;grid-template-columns:320px 1fr;gap:16px}
+.control-group{margin:20px 0}
+.control-group label{display:flex;justify-content:space-between;gap:10px;font-size:13px;margin-bottom:10px}
+.control-group output{color:var(--cyan);font:12px 'Space Mono',monospace;direction:ltr}
+input[type=range]{width:100%;accent-color:#8a83ff}
+.hint{font-size:11px;color:var(--muted);line-height:1.7;margin-top:7px}
+.chart-wrap{background:#0b1020;border:1px solid var(--line);border-radius:10px;padding:12px;min-height:320px}
+canvas{width:100%;height:300px;display:block}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:12px}
+.legend i{width:9px;height:9px;border-radius:50%;display:inline-block;margin-left:5px}
+.result-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.metric{background:#151d33;border:1px solid var(--line);padding:14px;border-radius:9px}
+.metric span{font-size:11px;color:var(--muted);display:block}
+.metric strong{font:20px 'Space Mono',monospace;color:var(--cyan);display:block;margin-top:5px;direction:ltr}
+.action-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.result-message{font-size:12px;line-height:1.8;color:#c5cce1;margin-top:12px;min-height:24px}
+
+/* TEST */
+.test-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.axis-box{padding:18px;background:#10172a;border:1px solid var(--line);border-radius:10px;margin-top:15px}
+.axis-box label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:8px}
+.prediction{text-align:center;padding:28px;background:#111a30;border:1px solid var(--line);border-radius:12px}
+.prediction .big{font:36px 'Space Mono',monospace;color:var(--cyan);direction:ltr}
+.prediction h3{font-size:15px}
+.prediction p{color:var(--muted);font-size:12px;line-height:1.8}
+.confidence{height:7px;background:#29314a;border-radius:10px;overflow:hidden;margin:15px 0}
+.confidence div{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--purple));transition:.5s}
+.small-table{width:100%;border-collapse:collapse;margin-top:15px;font-size:12px}
+.small-table td,.small-table th{padding:10px;border-bottom:1px solid var(--line);text-align:right}
+.small-table th{color:var(--muted);font-weight:400}
+
+/* DISCOVERY */
+.quote-panel{
+  padding:30px;background:linear-gradient(120deg,rgba(70,101,210,.16),rgba(147,89,210,.12));
+  border:1px solid rgba(141,148,255,.22);border-radius:14px;
+}
+.quote-panel blockquote{font-size:clamp(20px,3vw,30px);line-height:1.8;margin:12px 0}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.step{background:#131a2c;border:1px solid var(--line);border-radius:10px;padding:17px}
+.step b{color:var(--orange);font:12px 'Space Mono',monospace;direction:ltr}
+.step h3{font-size:13px}
+.step p{font-size:11px;color:var(--muted);line-height:1.8}
+
+/* SOURCES / FOOTER */
+.source-list{display:grid;gap:10px}
+.source{
+  display:flex;justify-content:space-between;align-items:center;gap:15px;
+  border:1px solid var(--line);background:#12192b;padding:14px;border-radius:8px;
+}
+.source span{font-size:12px}
+.source a{font-size:11px;color:var(--cyan);white-space:nowrap}
+footer{border-top:1px solid var(--line);padding:24px;text-align:center;color:#69738f;font-size:11px;line-height:2}
+@media(max-width:850px){
+  .header-inner{flex-wrap:wrap}
+  nav{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap}
+  nav button{white-space:nowrap}
+  .lab-layout,.two-col{grid-template-columns:1fr}
+  .cards-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+  main{padding:27px 14px 60px}
+  .header-inner{padding:12px 14px}
+  .logo{font-size:14px}
+  .stat-grid,.cards-grid,.test-layout,.steps{grid-template-columns:1fr}
+  .compare{grid-template-columns:1fr}
+  .scene h1{letter-spacing:-1px}
+  .source{align-items:flex-start;flex-direction:column}
+  .result-strip{grid-template-columns:1fr}
+  .time-item{grid-template-columns:65px 1fr}
+}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<section id="intro">
+  <div class="intro-grid"></div>
+  <div class="intro-orb"></div>
+  <div class="intro-orb two"></div>
+  <div class="intro-top">
+    <span>AI RESEARCH EXPERIENCE / 001</span>
+    <span id="intro-clock">SYSTEM INITIALIZING</span>
+  </div>
+
+  <div class="intro-content">
+    <div class="scene active" data-scene="0">
+      <div class="small-label">A QUESTION ABOUT OUR WORLD</div>
+      <h1>في كل يوم، ينتج العالم<br><span class="accent">كميات هائلة من البيانات.</span></h1>
+      <p>لكن كيف نحول هذه البيانات إلى معرفة؟<br>وكيف تغيرت الطريقة التي نحلل بها العالم؟</p>
+      <div class="intro-visual">
+        <div class="data-lines">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scene" data-scene="1">
+      <div class="small-label">SCENARIO 01 / MANUAL PROCESS</div>
+      <h1>قبل استخدام<br><span class="orange">الذكاء الاصطناعي</span></h1>
+      <p>تخيّل أنك أمام 500 تقرير بحثي، ومهمتك تصنيفها واستخراج الموضوعات المشتركة بينها.</p>
+      <div class="intro-visual">
+        <div class="file-stack">
+          <div class="file">REPORT_001.pdf</div>
+          <div class="file">REPORT_002.pdf</div>
+          <div class="file">REPORT_003.pdf</div>
+        </div>
+      </div>
+      <p>قراءة، مقارنة، تنظيم، ثم مراجعة النتائج.</p>
+    </div>
+
+    <div class="scene" data-scene="2">
+      <div class="small-label">SCENARIO 02 / AI ASSISTED</div>
+      <h1>مع مساعدة<br><span class="accent">الذكاء الاصطناعي</span></h1>
+      <p>يمكن للأداة تحليل النصوص وتجميع الموضوعات المتشابهة واقتراح ملخص أولي خلال وقت أقصر.</p>
+      <div class="pipeline">
+        <div class="pipe"><strong>INPUT</strong><small>التقارير</small></div>
+        <span class="pipe-arrow">←</span>
+        <div class="pipe"><strong>ANALYSIS</strong><small>تحليل الأنماط</small></div>
+        <span class="pipe-arrow">←</span>
+        <div class="pipe"><strong>OUTPUT</strong><small>نتائج أولية</small></div>
+      </div>
+    </div>
+
+    <div class="scene" data-scene="3">
+      <div class="small-label">THE COMPARISON</div>
+      <h1>ما الذي تغيّر؟</h1>
+      <div class="compare">
+        <div class="compare-card">
+          <h3 class="orange">المعالجة اليدوية</h3>
+          <p>• قراءة كل تقرير</p><p>• مقارنة المعلومات</p><p>• تنظيم النتائج يدويًا</p>
+        </div>
+        <div class="compare-card">
+          <h3 class="accent">بمساعدة AI</h3>
+          <p>• معالجة نصوص كثيرة</p><p>• اقتراح أنماط مشتركة</p><p>• إعداد ملخص أولي للمراجعة</p>
+        </div>
+      </div>
+      <p>المقارنة توضيحية لسير العمل، وليست قياسًا تجريبيًا لزمن أو دقة محددين.</p>
+    </div>
+
+    <div class="scene" data-scene="4">
+      <div class="small-label">A CRITICAL QUESTION</div>
+      <h1>لكن هل يعني ذلك<br><span class="orange">أنه دائمًا على صواب؟</span></h1>
+      <p>ليس بالضرورة.</p>
+      <div class="intro-visual">
+        <div style="font-size:48px;color:var(--orange);text-shadow:0 0 35px rgba(255,152,122,.4)">?</div>
+      </div>
+      <p>قد تختلف الإجابات بين الأنظمة، وقد تبدو الإجابة مقنعة رغم احتوائها على خطأ.</p>
+    </div>
+
+    <div class="scene" data-scene="5">
+      <div class="small-label">WELCOME TO THE RESEARCH LAB</div>
+      <div class="intro-brand">THE UNWRITTEN</div>
+      <h1 style="font-size:clamp(23px,4vw,39px)">ما لم يُكتب بعد</h1>
+      <p>الذكاء الاصطناعي يفتح احتمالات جديدة،<br>لكن فهمه يبدأ عندما نتجاوز مجرد استخدامه.</p>
+      <button class="intro-continue" onclick="enterLab()">الدخول إلى المختبر ←</button>
+    </div>
+  </div>
+
+  <div class="scene-counter" style="position:absolute;bottom:28px;right:5%">
+    <span id="scene-number">01</span> / 06
+  </div>
+  <div class="intro-progress" id="intro-progress"></div>
+  <button class="skip-intro" onclick="enterLab()">تجاوز المقدمة ↗️</button>
+</section>
+
+<div id="app">
+<header>
+  <div class="header-inner">
+    <div class="logo">THE <span>UNWRITTEN</span></div>
+    <nav>
+      <button class="active" data-page="overview">الرئيسية</button>
+      <button data-page="history">رحلة الذكاء الاصطناعي</button>
+      <button data-page="lab">مختبر التدريب</button>
+      <button data-page="test">اختبار النموذج</button>
+      <button data-page="applications">في عالمنا</button>
+      <button data-page="discovery">ما اكتشفته</button>
+      <button data-page="about">عن المشروع</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="page active" id="overview">
+  <div class="panel hero">
+    <div class="hero-content">
+      <div class="eyebrow">ARTIFICIAL INTELLIGENCE / RESEARCH LAB</div>
+      <h1>ما لم يُكتب بعد<br><span class="accent">THE UNWRITTEN</span></h1>
+      <p>رحلة لاستكشاف الذكاء الاصطناعي من الفكرة إلى التجربة؛ نفهم كيف تطور، ونشاهد أين يُستخدم، ثم نختبر كيف يتعلم النموذج وكيف يمكن أن يخطئ.</p>
+      <button class="primary-btn" onclick="showPage('lab')">ابدأ التجربة البحثية ←</button>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat"><strong>1950</strong><span>بداية سؤال مهم حول قدرة الآلات على التفكير</span></div>
+    <div class="stat"><strong>2017</strong><span>ظهور بنية Transformer في ورقة بحثية مؤثرة</span></div>
+    <div class="stat"><strong>2022</strong><span>إطلاق ChatGPT للعامة</span></div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title"><h2>ما المقصود بالذكاء الاصطناعي؟</h2><span class="tag">CONCEPT</span></div>
+      <p style="color:#bdc5dc;line-height:2;font-size:14px">
+        الذكاء الاصطناعي مجال في علوم الحاسب يطوّر أنظمة تستطيع تنفيذ مهام ترتبط عادةً بقدرات بشرية، مثل التعرّف على الأنماط، وفهم اللغة، والتنبؤ، وتوليد المحتوى.
+      </p>
+      <div class="note">ليس كل نظام ذكاء اصطناعي يعمل بالطريقة نفسها؛ فهناك نماذج تتعلم من البيانات، وأنظمة تعتمد على قواعد، ونماذج توليدية تنتج محتوى جديدًا.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><h2>كيف ستستكشف التجربة؟</h2><span class="tag">LAB MAP</span></div>
+      <div class="timeline">
+        <div class="time-item"><div class="time-year">01</div><div><h3>اكتشف التاريخ</h3><p>محطات ساهمت في تطور المجال.</p></div></div>
+        <div class="time-item"><div class="time-year">02</div><div><h3>درّب نموذجًا</h3><p>غيّر البيانات وشاهد كيف يتعلم.</p></div></div>
+        <div class="time-item"><div class="time-year">03</div><div><h3>اختبر النتائج</h3><p>جرّب عينة جديدة وافهم قرار النموذج.</p></div></div>
+        <div class="time-item"><div class="time-year">04</div><div><h3>اكتشف الحدود</h3><p>تعرّف على اختلاف الإجابات وأهمية التحقق.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="history">
+  <div class="page-heading">
+    <div class="eyebrow">THE TIMELINE</div>
+    <h1>رحلة تطور الذكاء الاصطناعي</h1>
+    <p>لم يظهر الذكاء الاصطناعي فجأة؛ بل تشكل عبر أفكار وأبحاث واكتشافات تراكمت على مدى عقود.</p>
+  </div>
+  <div class="panel">
+    <div class="timeline">
+      <div class="time-item"><div class="time-year">1950</div><div><h3>هل تستطيع الآلة التفكير؟</h3><p>نشر آلان تورنغ ورقته الشهيرة «Computing Machinery and Intelligence»، وناقش فيها إمكانية اختبار سلوك الآلة الذكي، وطرح ما أصبح يعرف باختبار تورنغ.</p></div></div>
+      <div class="time-item"><div class="time-year">1955–56</div><div><h3>ورشة دارتموث</h3><p>طُرح مقترح مشروع بحثي صيفي عام 1955، وعُقدت ورشة دارتموث عام 1956، وتُعد محطة تأسيسية مهمة في ظهور الذكاء الاصطناعي كمجال بحثي.</p></div></div>
+      <div class="time-item"><div class="time-year">1997</div><div><h3>Deep Blue يتغلب على كاسباروف</h3><p>حقق حاسوب IBM Deep Blue فوزًا على بطل العالم في الشطرنج غاري كاسباروف في مباراة من ست مباريات.</p></div></div>
+      <div class="time-item"><div class="time-year">2012</div><div><h3>قفزة في التعرف على الصور</h3><p>حقق نموذج AlexNet نتائج مؤثرة في مسابقة ImageNet، وساهم في إبراز قوة التعلم العميق في تصنيف الصور.</p></div></div>
+      <div class="time-item"><div class="time-year">2017</div><div><h3>Transformer</h3><p>نشر باحثون ورقة «Attention Is All You Need»، وقدمت بنية Transformer التي أصبحت أساسًا مهمًا لكثير من نماذج اللغة الحديثة.</p></div></div>
+      <div class="time-item"><div class="time-year">2022</div><div><h3>ChatGPT</h3><p>أطلقت OpenAI خدمة ChatGPT للعامة في 30 نوفمبر 2022، وساهمت في انتشار استخدام المحادثة مع النماذج التوليدية.</p></div></div>
+    </div>
+  </div>
+  <div class="note">ملاحظة تاريخية: عام 1956 ليس تاريخ اختراع الذكاء الاصطناعي، بل محطة تأسيسية بارزة في تاريخ المجال.</div>
+</section>
+
+<section class="page" id="lab">
+  <div class="page-heading">
+    <div class="eyebrow">EXPERIMENT 01 / MODEL TRAINING</div>
+    <h1>مختبر تدريب النموذج</h1>
+    <p>في هذه التجربة ستتعرف على طريقة عمل خوارزمية K-Nearest Neighbors (K-NN) من خلال بيانات اصطناعية ثنائية الأبعاد.</p>
+  </div>
+  <div class="lab-layout">
+    <div class="panel">
+      <div class="panel-title"><h2>إعدادات التجربة</h2><span class="tag">CONTROLS</span></div>
+      <div class="control-group">
+        <label>عدد عينات التدريب <output id="sampleOut">80</output></label>
+        <input type="range" id="sampleRange" min="30" max="180" step="10" value="80">
+        <div class="hint">عدد النقاط التي سيستخدمها النموذج للتعلم.</div>
+      </div>
+      <div class="control-group">
+        <label>تداخل الفئتين <output id="overlapOut">25%</output></label>
+        <input type="range" id="overlapRange" min="0" max="85" step="5" value="25">
+        <div class="hint">كلما زاد التداخل، أصبحت بعض العينات أقرب إلى الفئة الأخرى.</div>
+      </div>
+      <div class="control-group">
+        <label>عدد أقرب العينات (K) <output id="kOut">5</output></label>
+        <input type="range" id="kRange" min="1" max="15" step="2" value="5">
+        <div class="hint">عدد العينات الأقرب التي يعتمد عليها النموذج عند التصنيف.</div>
+      </div>
+      <button class="primary-btn" style="width:100%" onclick="trainModel()">تشغيل التدريب وإعادة التوليد</button>
+      <p class="hint" style="margin-top:13px">البيانات المستخدمة تعليمية ومولدة داخل المتصفح، وليست بيانات أشخاص أو سجلات واقعية.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><h2>خريطة توزيع البيانات</h2><span class="tag">DATA VISUALIZATION</span></div>
+      <div class="chart-wrap"><canvas id="scatter" width="850" height="420"></canvas></div>
+      <div class="legend">
+        <span><i style="background:#62d9f4"></i>الفئة A</span>
+        <span><i style="background:#b394ff"></i>الفئة B</span>
+      </div>
+      <div class="result-strip">
+        <div class="metric"><span>عينات التدريب</span><strong id="trainCount">80</strong></div>
+        <div class="metric"><span>الفئات</span><strong>02</strong></div>
+        <div class="metric"><span>الخوارزمية</span><strong>K-NN</strong></div>
+      </div>
+      <div class="result-message" id="trainMessage">النموذج جاهز. غيّر الإعدادات ثم شغّل التدريب لملاحظة أثرها.</div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="test">
+  <div class="page-heading">
+    <div class="eyebrow">EXPERIMENT 02 / MODEL EVALUATION</div>
+    <h1>اختبر النموذج</h1>
+    <p>بعد التدريب، حان وقت اختبار النموذج على بيانات لم يستخدمها أثناء التدريب، ثم تجربة عينة جديدة من اختيارك.</p>
+  </div>
+  <div class="test-layout">
+    <div class="panel">
+      <div class="panel-title"><h2>تقييم بيانات الاختبار</h2><span class="tag">TEST SET</span></div>
+      <p class="muted" style="font-size:12px;line-height:1.8">نقيس عدد التوقعات الصحيحة مقارنة بإجمالي عينات الاختبار. هذه العينات منفصلة عن بيانات التدريب.</p>
+      <div class="result-strip">
+        <div class="metric"><span>دقة الاختبار</span><strong id="accuracy">—</strong></div>
+        <div class="metric"><span>توقعات صحيحة</span><strong id="correctCount">—</strong></div>
+        <div class="metric"><span>إجمالي الاختبار</span><strong id="testCount">—</strong></div>
+      </div>
+      <button class="secondary-btn" style="margin-top:15px" onclick="evaluateModel()">إعادة تقييم النموذج</button>
+      <div class="note">الدقة تتغير بحسب توزيع البيانات والتداخل وعدد أقرب العينات. ارتفاعها في هذه المحاكاة لا يعني أن النموذج مناسب لكل مهمة واقعية.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><h2>جرّب عينة جديدة</h2><span class="tag">LIVE PREDICTION</span></div>
+      <div class="axis-box">
+        <label>المتغير الأول <output id="xOut">0.50</output></label>
+        <input type="range" id="xRange" min="0" max="100" value="50">
+        <label style="margin-top:17px">المتغير الثاني <output id="yOut">0.50</output></label>
+        <input type="range" id="yRange" min="0" max="100" value="50">
+      </div>
+      <button class="primary-btn" style="width:100%" onclick="predictCustom()">تحليل العينة</button>
+      <div class="prediction" style="margin-top:15px">
+        <div class="eyebrow">MODEL OUTPUT</div>
+        <div class="big" id="predictionClass">—</div>
+        <h3 id="predictionTitle">بانتظار العينة</h3>
+        <div class="confidence"><div id="agreementBar"></div></div>
+        <p id="predictionDescription">حرّك المتغيرات ثم اطلب تحليل العينة.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="applications">
+  <div class="page-heading">
+    <div class="eyebrow">AI IN THE REAL WORLD</div>
+    <h1>الذكاء الاصطناعي حولنا</h1>
+    <p>لا يقتصر الذكاء الاصطناعي على المحادثات؛ بل يدخل في مجالات متعددة، وتختلف طبيعة دوره بحسب المهمة والبيانات المتاحة.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="info-card">
+      <div class="card-icon">✚</div>
+      <h3>الرعاية الصحية</h3>
+      <p>تُستخدم بعض الأنظمة لتحليل الصور الطبية واكتشاف أنماط قد تساعد المختصين في تقييم الحالات واتخاذ القرار. وتظل المراجعة الطبية البشرية مهمة.</p>
+      <a href="https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-enabled-medical-devices" target="_blank" rel="noopener">مرجع FDA ↗️</a>
+    </div>
+    <div class="info-card">
+      <div class="card-icon">⌁</div>
+      <h3>استكشاف الفضاء</h3>
+      <p>يمكن استخدام تقنيات التعلم الآلي لتحليل كميات ضخمة من البيانات العلمية، والمساعدة في تصنيف الصور والأنماط التي ترصدها المهمات والتلسكوبات.</p>
+      <a href="https://www.nasa.gov/" target="_blank" rel="noopener">NASA ↗️</a>
+    </div>
+    <div class="info-card">
+      <div class="card-icon">✧</div>
+      <h3>الإبداع وصناعة المحتوى</h3>
+      <p>تستطيع النماذج التوليدية المساعدة في إنشاء نصوص وصور وأفكار أولية. لكن جودة الناتج تعتمد على التوجيه، والمراجعة، وحقوق الاستخدام.</p>
+      <a href="https://openai.com/index/chatgpt/" target="_blank" rel="noopener">مثال على النماذج التوليدية ↗️</a>
+    </div>
+  </div>
+  <div class="note">وجود الذكاء الاصطناعي في مجال ما لا يعني أنه يتخذ جميع القرارات بنفسه؛ فقد يكون دوره تحليلًا مساعدًا أو اقتراحًا أو أتمتة لجزء محدد من العمل.</div>
+</section>
+
+<section class="page" id="discovery">
+  <div class="page-heading">
+    <div class="eyebrow">A PERSONAL DISCOVERY</div>
+    <h1>ما الذي فاجأني؟</h1>
+    <p>من أهم ما اكتشفته أن التعامل مع الذكاء الاصطناعي لا يعني الحصول دائمًا على الإجابة نفسها أو على المستوى نفسه من الدقة.</p>
+  </div>
+  <div class="quote-panel">
+    <div class="eyebrow">NOT ALL MODELS RESPOND THE SAME WAY</div>
+    <blockquote>ليس كل ذكاء اصطناعي يعطي النتائج نفسها، حتى عندما نطرح عليه السؤال ذاته.</blockquote>
+    <p style="color:#b2bbd5;line-height:2;font-size:13px">
+      قد يقدم أحد الأنظمة إجابة دقيقة، بينما يقدم نظام آخر إجابة غريبة أو غير مترابطة. وقد يرتبط ذلك باختلاف النماذج، وجودة بيانات التدريب وتنوعها، وطريقة بناء النظام وتخصيصه للمهمة.
+    </p>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <b>01 / DATA</b><h3>بيانات التدريب</h3>
+      <p>إذا كانت البيانات محدودة أو غير متنوعة أو لا تغطي موضوعًا معينًا جيدًا، فقد يضعف أداء النموذج في ذلك الموضوع.</p>
+    </div>
+    <div class="step">
+      <b>02 / MODEL</b><h3>اختلاف النماذج</h3>
+      <p>تختلف الأنظمة في بنيتها وحجمها وطريقة تدريبها وقدراتها، لذلك لا يُتوقع أن تتطابق نتائجها دائمًا.</p>
+    </div>
+    <div class="step">
+      <b>03 / VERIFICATION</b><h3>التحقق البشري</h3>
+      <p>قد ينتج النموذج معلومة خاطئة بصياغة واثقة؛ لذلك يجب مراجعة المعلومات المهمة من مصادر موثوقة.</p>
+    </div>
+  </div>
+  <div class="note">الفكرة التي خرجت بها: لا أقيس جودة الإجابة بأسلوبها الواثق فقط، بل أتحقق من صحتها، وأقارنها بالمصادر عند الحاجة.</div>
+  <div class="panel" style="margin-top:16px">
+    <div class="panel-title"><h2>كيف أتعامل مع إجابة غير مألوفة؟</h2><span class="tag">MY CHECKLIST</span></div>
+    <div class="timeline">
+      <div class="time-item"><div class="time-year">01</div><div><h3>أراجع السؤال</h3><p>هل كان واضحًا ومحددًا؟ وهل قدمت السياق الكافي؟</p></div></div>
+      <div class="time-item"><div class="time-year">02</div><div><h3>أتحقق من المصدر</h3><p>أبحث عن المعلومة في مرجع موثوق بدل قبولها كما هي.</p></div></div>
+      <div class="time-item"><div class="time-year">03</div><div><h3>أقارن عند الحاجة</h3><p>أقارن الإجابة بأداة أخرى، مع الانتباه إلى أن اتفاق الأدوات لا يثبت الصحة وحده.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="about">
+  <div class="page-heading">
+    <div class="eyebrow">BEHIND THE PROJECT</div>
+    <h1>عن التجربة</h1>
+    <p>هذا المشروع يعكس فهمي للذكاء الاصطناعي من خلال تجربة تجمع بين الاستكشاف والتطبيق والتأمل النقدي.</p>
+  </div>
+  <div class="two-col">
+    <div class="panel">
+      <div class="panel-title"><h2>تعريفي للذكاء الاصطناعي</h2><span class="tag">MY PERSPECTIVE</span></div>
+      <p style="font-size:20px;line-height:2.1;color:#e1e5fa">
+        أرى الذكاء الاصطناعي مساحةً تتقاطع فيها المعرفة مع الخيال؛ يوسّع ما يمكننا تجربته، لكنه لا يختار عنا ما يستحق أن نصنعه.
+      </p>
+    </div>
+    <div class="panel">
+      <div class="panel-title"><h2>كيف ساعدني الذكاء الاصطناعي؟</h2><span class="tag">AI CONTRIBUTION</span></div>
+      <p style="color:#b9c2dc;line-height:2;font-size:13px">
+        استعنت بـ ChatGPT في مراجعة المعلومات، وتحسين الصياغة، والمساعدة في كتابة أجزاء من الكود البرمجي.
+      </p>
+      <div class="note">دوري الشخصي: اختيار فكرة المشروع، وتحديد مسار التجربة، واختيار المحتوى، وتوجيه الهوية البصرية، ومراجعة المخرجات وتعديلها.</div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:16px">
+    <div class="panel-title"><h2>المصادر والمراجع</h2><span class="tag">REFERENCES</span></div>
+    <div class="source-list">
+      <div class="source"><span>Alan Turing — Computing Machinery and Intelligence (1950)</span><a href="https://academic.oup.com/mind/article/LIX/236/433/986238" target="_blank" rel="noopener">فتح المصدر ↗️</a></div>
+      <div class="source"><span>Dartmouth — Artificial Intelligence Project (1955–1956)</span><a href="https://www-formal.stanford.edu/jmc/history/dartmouth/dartmouth.html" target="_blank" rel="noopener">فتح المصدر ↗️</a></div>
+      <div class="source"><span>IBM — Deep Blue</span><a href="https://www.ibm.com/history/deep-blue" target="_blank" rel="noopener">فتح المصدر ↗️</a></div>
+      <div class="source"><span>AlexNet — ImageNet Classification (2012)</span><a href="https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks" target="_blank" rel="noopener">فتح المصدر ↗️</a></div>
+      <div class="source"><span>Attention Is All You Need (2017)</span><a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">فتح المصدر ↗️</a></div>
+      <div class="source"><span>OpenAI — Introducing ChatGPT (2022)</span><a href="https://openai.com/index/chatgpt/" target="_blank" rel="noopener">فتح المصدر ↗️</a></div>
+      <div class="source"><span>FDA — Artificial Intelligence-Enabled Medical Devices</span><a href="https://www.fda.gov/medical-devices/software-medical-device-samd/artificial-intelligence-enabled-medical-devices" target="_blank" rel="noopener">فتح المصدر ↗️</a></div>
+      <div class="source"><span>NIST — Artificial Intelligence Risk Management Framework</span><a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">فتح المصدر ↗️</a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  THE UNWRITTEN — ما لم يُكتب بعد<br>
+  تجربة رقمية استكشافية لفهم الذكاء الاصطناعي<br>
+  <span class="mono">LEARN / EXPERIMENT / QUESTION</span>
+</footer>
+</div>
+
+<script>
+/* INTRO TIMING */
+const intro=document.getElementById('intro');
+const app=document.getElementById('app');
+const scenes=[...document.querySelectorAll('.scene')];
+let sceneIndex=0;
+let introTimer=null;
+let introEnded=false;
+const sceneDuration=7200;
+
+function showScene(index){
+  if(introEnded)return;
+  scenes.forEach((s,i)=>s.classList.toggle('active',i===index));
+  sceneIndex=index;
+  document.getElementById('scene-number').textContent=String(index+1).padStart(2,'0');
+  document.getElementById('intro-clock').textContent='SEQUENCE 0'+(index+1);
+  document.getElementById('intro-progress').style.width=((index+1)/scenes.length*100)+'%';
+  if(index===scenes.length-1){
+    clearTimeout(introTimer);
+    return;
+  }
+  introTimer=setTimeout(()=>showScene(index+1),sceneDuration);
+}
+
+function enterLab(){
+  if(introEnded)return;
+  introEnded=true;
+  clearTimeout(introTimer);
+  intro.style.transition='opacity .9s ease';
+  intro.style.opacity='0';
+  setTimeout(()=>{
+    intro.style.display='none';
+    app.style.display='block';
+    window.scrollTo(0,0);
+    trainModel();
+  },850);
+}
+
+introTimer=setTimeout(()=>showScene(1),sceneDuration);
+
+/* NAVIGATION */
+const navButtons=document.querySelectorAll('nav button');
+navButtons.forEach(btn=>btn.addEventListener('click',()=>showPage(btn.dataset.page)));
+
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  navButtons.forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='test')evaluateModel();
+  if(id==='lab')drawChart();
+}
+
+/* KNN MODEL — SILENT */
+let trainData=[];
+let testData=[];
+let kValue=5;
+let modelReady=false;
+
+const sampleRange=document.getElementById('sampleRange');
+const overlapRange=document.getElementById('overlapRange');
+const kRange=document.getElementById('kRange');
+
+function randn(){
+  let u=0,v=0;
+  while(u===0)u=Math.random();
+  while(v===0)v=Math.random();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+}
+
+function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+
+function makePoint(label,overlap){
+  const centers=label===0?[.29,.34]:[.71,.67];
+  const spread=.105+(overlap/100)*.18;
+  return {
+    x:clamp(centers[0]+randn()*spread,0,1),
+    y:clamp(centers[1]+randn()*spread,0,1),
+    label
+  };
+}
+
+function trainModel(){
+  const total=Number(sampleRange.value);
+  const overlap=Number(overlapRange.value);
+  kValue=Number(kRange.value);
+  trainData=[];
+  testData=[];
+
+  for(let label=0;label<2;label++){
+    const points=[];
+    for(let i=0;i<total/2;i++)points.push(makePoint(label,overlap));
+    points.sort(()=>Math.random()-.5);
+    const split=Math.floor(points.length*.75);
+    trainData.push(...points.slice(0,split));
+    testData.push(...points.slice(split));
+  }
+
+  modelReady=true;
+  document.getElementById('sampleOut').textContent=total;
+  document.getElementById('overlapOut').textContent=overlap+'%';
+  document.getElementById('kOut').textContent=kValue;
+  document.getElementById('trainCount').textContent=trainData.length;
+  document.getElementById('trainMessage').textContent=
+    'اكتمل التدريب على '+trainData.length+' عينة. يمكنك الآن الانتقال إلى الاختبار وتجربة عينة جديدة.';
+
+  drawChart();
+  evaluateModel();
+}
+
+function classify(x,y){
+  const distances=trainData.map(p=>({
+    label:p.label,
+    distance:Math.hypot(p.x-x,p.y-y)
+  })).sort((a,b)=>a.distance-b.distance);
+
+  const nearest=distances.slice(0,kValue);
+  const countA=nearest.filter(p=>p.label===0).length;
+  const countB=nearest.filter(p=>p.label===1).length;
+  const label=countA>=countB?0:1;
+
+  return {
+    label,countA,countB,
+    agreement:Math.max(countA,countB)/kValue
+  };
+}
+
+function evaluateModel(){
+  if(!modelReady||!testData.length)return;
+  let correct=0;
+
+  testData.forEach(p=>{
+    if(classify(p.x,p.y).label===p.label)correct++;
+  });
+
+  const acc=Math.round(correct/testData.length*100);
+  document.getElementById('accuracy').textContent=acc+'%';
+  document.getElementById('correctCount').textContent=correct;
+  document.getElementById('testCount').textContent=testData.length;
+}
+
+/* CHART */
+function drawChart(){
+  const canvas=document.getElementById('scatter');
+  if(!canvas)return;
+
+  const ctx=canvas.getContext('2d');
+  const w=canvas.width,h=canvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#0b1020';
+  ctx.fillRect(0,0,w,h);
+
+  const pad=38;
+  const plotW=w-pad*2,plotH=h-pad*2;
+
+  ctx.strokeStyle='rgba(145,160,210,.12)';
+  ctx.lineWidth=1;
+
+  for(let i=0;i<=5;i++){
+    const x=pad+plotW*i/5;
+    const y=pad+plotH*i/5;
+    ctx.beginPath();ctx.moveTo(x,pad);ctx.lineTo(x,h-pad);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();
+  }
+
+  if(modelReady){
+    trainData.forEach(p=>{
+      const x=pad+p.x*plotW;
+      const y=h-pad-p.y*plotH;
+      ctx.beginPath();
+      ctx.arc(x,y,5,0,Math.PI*2);
+      ctx.fillStyle=p.label===0?'#62d9f4':'#b394ff';
+      ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.22)';
+      ctx.lineWidth=1;
+      ctx.stroke();
+    });
+  }
+
+  ctx.fillStyle='#7f8aa9';
+  ctx.font='12px sans-serif';
+  ctx.fillText('المتغير الأول',w/2-30,h-7);
+  ctx.save();
+  ctx.translate(12,h/2+30);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText('المتغير الثاني',0,0);
+  ctx.restore();
+}
+
+[sampleRange,overlapRange,kRange].forEach(el=>{
+  el.addEventListener('input',()=>{
+    document.getElementById('sampleOut').textContent=sampleRange.value;
+    document.getElementById('overlapOut').textContent=overlapRange.value+'%';
+    document.getElementById('kOut').textContent=kRange.value;
+  });
+});
+
+document.getElementById('xRange').addEventListener('input',e=>{
+  document.getElementById('xOut').textContent=(e.target.value/100).toFixed(2);
+});
+
+document.getElementById('yRange').addEventListener('input',e=>{
+  document.getElementById('yOut').textContent=(e.target.value/100).toFixed(2);
+});
+
+function predictCustom(){
+  if(!modelReady){trainModel();return}
+
+  const x=Number(document.getElementById('xRange').value)/100;
+  const y=Number(document.getElementById('yRange').value)/100;
+  const result=classify(x,y);
+  const name=result.label===0?'A':'B';
+
+  document.getElementById('predictionClass').textContent=name;
+  document.getElementById('predictionTitle').textContent=
+    result.label===0?'العينة أقرب إلى الفئة A':'العينة أقرب إلى الفئة B';
+
+  document.getElementById('agreementBar').style.width=(result.agreement*100)+'%';
+
+  document.getElementById('predictionDescription').textContent=
+    'من أقرب '+kValue+' عينات، اتفقت '+Math.max(result.countA,result.countB)+
+    ' عينات على هذا التصنيف. نسبة الاتفاق بين أقرب العينات: '+
+    Math.round(result.agreement*100)+'%.';
+}
+
+/* INITIAL CONTROL LABELS */
+document.getElementById('sampleOut').textContent=sampleRange.value;
+document.getElementById('overlapOut').textContent=overlapRange.value+'%';
+document.getElementById('kOut').textContent=kRange.value;
+</script>
+</body>
+</html>
